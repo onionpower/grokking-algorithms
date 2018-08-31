@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace quicksort
@@ -10,7 +11,7 @@ namespace quicksort
             var a = new[] {3, 5, 8, 1, 2, 9, 4, 7, 6};            
             Console.WriteLine(string.Join(", ", a));
 
-            var xa = SortExtraSpace(a);
+            var xa = SortExtraSpace(a.ToList());
             Console.WriteLine(string.Join(", ", xa));
             
             //Sort(a, 0, a.Length - 1);
@@ -18,42 +19,30 @@ namespace quicksort
             
         }
 
-        private static int[] SortExtraSpace(int[] a)
+        private static List<int> SortExtraSpace(List<int> a)
         {
-            if (a.Length < 2)
+            if (a.Count < 2)
             {
                 return a;
             }
-            var pivot = a.Length - 1;
-            var r = a.Length - 2;
-            for (int l = 0; l < pivot; l++)
+
+            var left = new List<int>();
+            var right = new List<int>();
+            var pivot = a.Count - 1;
+            for (int i = 0; i < a.Count - 1; i++)
             {
-                if (a[l] < a[pivot])
+                if (a[i] < a[pivot])
                 {
+                    left.Add(a[i]);
                     continue;
                 }
-
-                for (; r > l; r--)
-                {
-                    if (a[r] < a[pivot])
-                    {
-                        break;
-                    }
-                }
-                Swap(a, l, r);
-
-                if (l == r)
-                {
-                    break;
-                }
+                right.Add(a[i]);
             }
-            Swap(a, r, pivot);
-            
-            return SortExtraSpace(a.Take(r - 1).ToArray())
-                .Append(a[pivot])
-                .Concat(SortExtraSpace(a.Skip(r + 1).ToArray()))
-                .ToArray();
 
+            var r = SortExtraSpace(left);
+            r.Add(a[pivot]);
+            r.AddRange(SortExtraSpace(right));
+            return r;
         }
         
         private static void Sort(int[] a, int start, int end)
