@@ -25,16 +25,22 @@ namespace bubble
     {
         public static void SortArray(this int[] a)
         {
-            for (int length = a.Length; length > 0; length--)
-            for (int i = 1; i < length; i++)
+            var swapped = false;
+            var length = a.Length - 1;
+            do
             {
-                if (a[i - 1] > a[i])
+                for (int i = 0; i < length; i++)
                 {
-                    Swap(a, i - 1, i);
+                    if (a[i] > a[i + 1])
+                    {
+                        Swap(a, i, i + 1);
+                        swapped = true;
+                    }
                 }
-            }   
+                length--;
+            } while (swapped && length > 1);
         }
-
+        
         public static void SortArrayRecursive(this int[] a)
         {
             var edge = a.Length;
