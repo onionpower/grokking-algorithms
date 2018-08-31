@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,6 +6,7 @@ namespace quicksort
 {
     class Program
     {
+        static Random rnd = new Random();
         static void Main(string[] args)
         {
             var a = new[] {3, 5, 8, 1, 2, 9, 4, 7, 6};            
@@ -28,9 +29,13 @@ namespace quicksort
 
             var left = new List<int>();
             var right = new List<int>();
-            var pivot = a.Count - 1;
-            for (int i = 0; i < a.Count - 1; i++)
+            var pivot = rnd.Next(0, a.Count);
+            for (int i = 0; i < a.Count; i++)
             {
+                if (i == pivot)
+                {
+                    continue;
+                }
                 if (a[i] < a[pivot])
                 {
                     left.Add(a[i]);
