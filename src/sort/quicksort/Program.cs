@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +15,7 @@ namespace quicksort
             var xa = SortExtraSpace(a.ToList());
             Console.WriteLine(string.Join(", ", xa));
             
-            //Sort(a, 0, a.Length - 1);
+            SortRecursive(a, 0, a.Length);
             Console.WriteLine(string.Join(", ", a));
             
         }
@@ -50,39 +50,38 @@ namespace quicksort
             return r;
         }
         
-        private static void Sort(int[] a, int start, int end)
+        private static void SortRecursive(int[] a, int start, int length)
         {
-            if (end - start == 1)
+            if (length - start < 2)
             {
                 return;
             }
             
-            var pivot = end;
-            var rhs = end - 1;
-            var lhs = start;
-            while (lhs < end)
+            var pivot = length - 1;
+            var lm = start;
+            var rm = pivot - 1;
+            for (;lm < pivot; lm++)
             {
-                if (a[lhs] < a[pivot])
+                if (a[lm] > a[pivot])
                 {
-                    lhs++;
-                    continue;
-                }
-    
-                while (a[rhs] > a[pivot] && rhs > lhs)
-                {
-                    rhs--;
-                }
+                    for (;rm > lm; rm--)
+                    {
+                        if (a[rm] < a[pivot])
+                        {
+                            Swap(a, lm, rm);
+                            break;
+                        }
+                    }
 
-                if (rhs == lhs)
-                {
-                    Swap(a, lhs, pivot);
-                    break;
+                    if (rm <= lm)
+                    {
+                        break;
+                    }
                 }
-                Swap(a, lhs++, rhs);
             }
-            
-            Sort(a, start, lhs - 1);
-            Sort(a, lhs + 1, end);
+            Swap(a, lm, pivot);
+            SortRecursive(a, start, lm - start);
+            SortRecursive(a, lm + 1, pivot);
         }
 
         private static void Swap(int[] a, int lhs, int rhs)
