@@ -9,14 +9,14 @@ namespace quicksort
         static Random rnd = new Random();
         static void Main(string[] args)
         {
-            var a = new[] {3, 5, 8, 1, 2, 9, 4, 7, 6};            
-            Console.WriteLine(string.Join(", ", a));
+            var a = new[] {3, 5, 8, 1, 2, 9, 4, -1, 17, 22, 7, 6, 14, 14, 14};            
+            WriteArray(a);
 
             var xa = SortExtraSpace(a.ToList());
-            Console.WriteLine(string.Join(", ", xa));
+            WriteArray(xa);
             
-            SortRecursive(a, 0, a.Length);
-            Console.WriteLine(string.Join(", ", a));
+            SortRecursive(a);
+            WriteArray(a);
             
         }
 
@@ -49,18 +49,23 @@ namespace quicksort
             r.AddRange(SortExtraSpace(right));
             return r;
         }
-        
-        private static void SortRecursive(int[] a, int start, int length)
+
+        private static void SortRecursive(int[] a)
         {
-            if (length - start < 2)
+            SortRecursive(a, 0, a.Length - 1);            
+        }
+        
+        private static void SortRecursive(int[] a, int sp, int ep)
+        {
+            if (ep - sp < 1)
             {
                 return;
             }
-            
-            var pivot = length - 1;
-            var lm = start;
-            var rm = pivot - 1;
-            for (;lm < pivot; lm++)
+
+            var lm = sp;
+            var rm = ep - 1;
+            var pivot = ep;
+            for (;lm < ep; lm++)
             {
                 if (a[lm] > a[pivot])
                 {
@@ -73,15 +78,16 @@ namespace quicksort
                         }
                     }
 
-                    if (rm <= lm)
+                    if (lm == rm)
                     {
                         break;
                     }
                 }
             }
+
             Swap(a, lm, pivot);
-            SortRecursive(a, start, lm - start);
-            SortRecursive(a, lm + 1, pivot);
+            SortRecursive(a, sp, lm - 1);
+            SortRecursive(a, lm + 1, ep);
         }
 
         private static void Swap(int[] a, int lhs, int rhs)
@@ -89,6 +95,11 @@ namespace quicksort
             var tmp = a[lhs];
             a[lhs] = a[rhs];
             a[rhs] = tmp;
+        }
+
+        private static void WriteArray(IEnumerable<int> a)
+        {
+            Console.WriteLine(string.Join(", ", a));
         }
     }
 }
