@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace mergesort
@@ -23,38 +24,43 @@ namespace mergesort
 
         private static int[] Merge(int[] l, int[] r)
         {
-            if (l.Length > 2)
+            if (l.Length > 1)
             {
                 var lcount = GetBiggerHalf(l);
                 l = Merge(l.Take(lcount).ToArray(), l.Skip(lcount).ToArray());
             }
 
-            if (r.Length > 2)
+            if (r.Length > 1)
             {
                 var rcount = GetBiggerHalf(r);
                 r = Merge(r.Take(rcount).ToArray(), r.Skip(rcount).ToArray());
             }
             var res = new int[l.Length + r.Length];
-            var i = 0;
-            for (int t = 0;i < r.Length; i++, t+=2)
+            var resp = 0;
+            int lp = 0;
+            int rp = 0;
+            for (; lp < l.Length && rp < r.Length; resp++)
             {
-                if (l[i] < r[i])
+                if (l[lp] < r[rp])
                 {
-                    res[t] = l[i];
-                    res[t + 1] = r[i];
+                    res[resp] = l[lp];
+                    lp++;
                 }
                 else
                 {
-                    res[t] = r[i];
-                    res[t + 1] = l[i];
+                    res[resp] = r[rp];
+                    rp++;
                 }
             }
 
-            if (i < l.Length)
+            for (; lp < l.Length; lp++, resp++)
             {
-                res[i+1] = l[i];
+                res[resp] = l[lp];
             }
-
+            for (; rp < r.Length; rp++, resp++)
+            {
+                res[resp] = r[rp];
+            }
             return res;
         }
 
