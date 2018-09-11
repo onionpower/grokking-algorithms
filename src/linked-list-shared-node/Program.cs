@@ -7,15 +7,21 @@ namespace linked_list_shared_node
     {
         private static LinkedList<object> ll1 = new LinkedList<object>();
         private static LinkedList<object> ll2 = new LinkedList<object>();
-        private static Guid shared = Guid.NewGuid();
+        private static object shared = Guid.NewGuid();
         
         static void Main(string[] args)
         {
             Init();
-            if (TryBruteForce(out var r))
+            if (TryBruteForce(out var rb))
             {
-                IsShared(r);
+                IsShared(rb);
             }
+
+            if (TryHashSet(out var rh))
+            {
+                IsShared(rh);
+            }
+            
         }
 
         private static void IsShared(object o)
@@ -23,6 +29,49 @@ namespace linked_list_shared_node
             Console.WriteLine(shared.Equals(o));
         }
 
+        private static bool TryHashSet(out object r)
+        {
+            var p1 = ll1.First;
+            var p2 = ll2.First;
+            var set = new HashSet<object>();
+            while (true)
+            {
+                if (p1 == null && p2 == null)
+                {
+                    r = null;
+                    return false;
+                }
+                
+                if (p1 != null)
+                {
+                    if (!set.Add(p1.Value))
+                    {
+                        if (p1.Value is Guid)
+                        {
+                            r = p1.Value;
+                            return true;
+                        }
+                    }
+
+                    p1 = p1.Next;
+                }
+
+                if (p2 != null)
+                {
+                    if (!set.Add(p2.Value))
+                    {
+                        if (p2.Value is Guid)
+                        {
+                            r = p2.Value;
+                            return true;
+                        }
+                    }
+
+                    p2 = p2.Next;
+                }
+            }
+        }
+        
         private static bool TryBruteForce(out object r)
         {
             foreach (var p1 in ll1)
